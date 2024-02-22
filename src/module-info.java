@@ -4,5 +4,3 @@
 /**
  * 
  */
-module campo_minado {
-}
