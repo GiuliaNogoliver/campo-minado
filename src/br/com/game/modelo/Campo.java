@@ -3,30 +3,32 @@ package br.com.game.modelo;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.game.excessao.ExplosaoException;
+
 public class Campo {
 	private final int linha;
 	private final int coluna;
-	
+
 	private boolean minado;
 	private boolean aberto;
 	private boolean marcado;
-	
+
 	private List<Campo> vizinhos = new ArrayList<>();
-	
+
 	public Campo(int linha, int coluna) {
 		this.linha = linha;
 		this.coluna = coluna;
 	}
-	
-	public boolean adicionarVizinho(Campo vizinho) {
+
+	boolean adicionarVizinho(Campo vizinho) {
 		boolean linhaDiferente = linha != vizinho.linha;
 		boolean colunaDiferente = coluna != vizinho.coluna;
 		boolean diagonal = linhaDiferente && colunaDiferente;
-		
+
 		int deltaLinha = Math.abs(linha - vizinho.linha);
 		int deltaColuna = Math.abs(coluna - vizinho.coluna);
 		int deltaGeral = deltaLinha + deltaColuna;
-		
+
 		if (deltaGeral == 1 && !diagonal) {
 			vizinhos.add(vizinho);
 			return true;
@@ -37,5 +39,34 @@ public class Campo {
 			return false;
 		}
 	}
-	
+
+	void alternarMarcacao() {
+		// Eu so posso alterar a marcacao de um campo que esta fechado
+		if (!aberto) {
+			// se é falso vira verdadeiro se for verdadeiro vira falso
+			marcado = !marcado;
+		}
+	}
+
+	boolean abrir() {
+		if (!aberto && !marcado) {
+			aberto = true;
+			if (minado) {
+				throw new ExplosaoException();
+			}
+			if (vizinhancaSegura()) {
+				vizinhos.forEach(v -> v.abrir());
+			}
+			return true;
+		} else {
+			// O abrir retorna false pq vc pode nao conseguir abrir 
+			// ele por causa das regras e vc mesmo definiu
+			return false;
+		}
+	}
+
+	boolean vizinhancaSegura() {
+		return vizinhos.stream().noneMatch(v -> v.minado);
+	}
+
 }

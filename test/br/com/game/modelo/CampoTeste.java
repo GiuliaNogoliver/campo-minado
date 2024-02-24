@@ -1,11 +1,9 @@
-package br.com.game;
+package br.com.game.modelo;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import br.com.game.modelo.Campo;
 
 class CampoTeste {
 
