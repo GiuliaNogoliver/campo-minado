@@ -1,8 +1,8 @@
 package br.com.game.modelo;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class Tabuleiro {
 	private int linhas;
@@ -38,7 +38,22 @@ public class Tabuleiro {
 	}
 
 	private void sortearMinas() {
+		long minasArmadas = 0;
+		Predicate<Campo> minado = c -> c.isMinado();
 
+		do {
+			minasArmadas = campo.stream().filter(minado).count();
+			int aleatorio = (int) (Math.random() * campo.size());
+			campo.get(aleatorio).minar();
+		} while (minasArmadas < minas);
 	}
 
+	public boolean objetivoAlcancado() {
+		return campo.stream().allMatch(c -> c.objetivoAlcancado());
+	}
+
+	public void reiniciar() {
+		campo.stream().forEach(c -> c.reiniciar());
+		sortearMinas();
+	}
 }
