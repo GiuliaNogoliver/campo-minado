@@ -91,6 +91,10 @@ public class Campo {
 		return linha;
 	}
 
+	public void setAberto(boolean aberto) {
+		this.aberto = aberto;
+	}
+
 	public int getColuna() {
 		return coluna;
 	}

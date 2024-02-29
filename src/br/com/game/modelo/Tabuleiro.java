@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import br.com.game.excessao.ExplosaoException;
+
 public class Tabuleiro {
 	private int linhas;
 	private int colunas;
@@ -22,9 +24,14 @@ public class Tabuleiro {
 	}
 
 	public void abrir(int linha, int coluna) {
-		campo.parallelStream().filter(c -> c.getLinha() == linha && c.getColuna() == coluna)
-		.findFirst()
-		.ifPresent(c -> c.abrir());
+		try {
+			campo.parallelStream().filter(c -> c.getLinha() == linha && c.getColuna() == coluna)
+			.findFirst()
+			.ifPresent(c -> c.abrir());
+		} catch (ExplosaoException e) {
+			campo.forEach(c -> c.setAberto(true));
+			throw e;
+		}
 	}
 	
 	public void alternarMarcacao(int linha, int coluna) {
