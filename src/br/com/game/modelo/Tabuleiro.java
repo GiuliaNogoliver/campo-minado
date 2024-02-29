@@ -61,9 +61,9 @@ public class Tabuleiro {
 		Predicate<Campo> minado = c -> c.isMinado();
 
 		do {
-			minasArmadas = campo.stream().filter(minado).count();
 			int aleatorio = (int) (Math.random() * campo.size());
 			campo.get(aleatorio).minar();
+			minasArmadas = campo.stream().filter(minado).count();
 		} while (minasArmadas < minas);
 	}
 
@@ -79,9 +79,20 @@ public class Tabuleiro {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
+		// gerar index do tabuleiro
+		sb.append(" ");
+		sb.append(" ");
+		for (int c = 0; c < colunas; c++) {
+			sb.append(" ");
+			sb.append(c);
+			sb.append(" ");
+		}
+		sb.append("\n");
 		
 		int i = 0;
 		for (int l = 0; l < linhas; l++) {
+			sb.append(l);
+			sb.append(" ");
 			for (int c = 0; c < colunas; c++) {
 				sb.append(" ");
 				sb.append(campo.get(i));

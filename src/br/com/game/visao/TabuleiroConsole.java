@@ -54,6 +54,7 @@ public class TabuleiroConsole {
 					tabuleiro.alternarMarcacao(xy.next(), xy.next());
 				}
 			}
+			System.out.println(tabuleiro);
 			System.out.println("Voce ganhou!!");
 		} catch (ExplosaoException e) {
 			System.out.println(tabuleiro);
