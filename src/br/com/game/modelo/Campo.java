@@ -2,9 +2,6 @@ package br.com.game.modelo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BooleanSupplier;
-
-import br.com.game.excessao.ExplosaoException;
 
 public class Campo {
 	private final int linha;
@@ -53,7 +50,8 @@ public class Campo {
 		if (!aberto && !marcado) {
 			aberto = true;
 			if (minado) {
-				throw new ExplosaoException();
+				// TODO Implementar nova versão
+				// FIXME Erro para ser corrigido
 			}
 			if (vizinhancaSegura()) {
 				vizinhos.forEach(v -> v.abrir());
@@ -113,20 +111,6 @@ public class Campo {
 		aberto = false;
 		minado = false;
 		marcado = false;
-	}
-	
-	public String toString() {
-		if(marcado) {
-			return "x";
-		} else if(aberto && minado) {
-			return "*";
-		} else if(aberto && minasNaVizinhanca()>0) {
-			return Long.toString(minasNaVizinhanca());
-		} else if (aberto) {
-			return " ";
-		} else {
-			return "?";
-		}
 	}
 
 	public boolean isMinado() {

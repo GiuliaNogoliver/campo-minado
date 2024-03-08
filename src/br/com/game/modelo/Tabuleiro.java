@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-import br.com.game.excessao.ExplosaoException;
-
 public class Tabuleiro {
 	private int linhas;
 	private int colunas;
@@ -28,7 +26,8 @@ public class Tabuleiro {
 			campo.parallelStream().filter(c -> c.getLinha() == linha && c.getColuna() == coluna)
 			.findFirst()
 			.ifPresent(c -> c.abrir());
-		} catch (ExplosaoException e) {
+		} catch (Exception e) {
+			// FIXME Ajustar a implementação do método abrir
 			campo.forEach(c -> c.setAberto(true));
 			throw e;
 		}
@@ -74,33 +73,5 @@ public class Tabuleiro {
 	public void reiniciar() {
 		campo.stream().forEach(c -> c.reiniciar());
 		sortearMinas();
-	}
-	
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		// gerar index do tabuleiro
-		sb.append(" ");
-		sb.append(" ");
-		for (int c = 0; c < colunas; c++) {
-			sb.append(" ");
-			sb.append(c);
-			sb.append(" ");
-		}
-		sb.append("\n");
-		
-		int i = 0;
-		for (int l = 0; l < linhas; l++) {
-			sb.append(l);
-			sb.append(" ");
-			for (int c = 0; c < colunas; c++) {
-				sb.append(" ");
-				sb.append(campo.get(i));
-				sb.append(" ");
-				i++;
-			}
-			sb.append("\n");
-		}
-		return sb.toString();
 	}
 }
