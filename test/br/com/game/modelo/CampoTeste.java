@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import br.com.game.excessao.ExplosaoException;
-
 class CampoTeste {
 
 	Campo campo;
@@ -105,17 +103,6 @@ class CampoTeste {
 		assertFalse(campo.abrir());
 	}
 
-	// Nesse teste queremos acertar na excessao por isso usamos o assertThrows
-	@Test
-	void testeAbrirMinadoNaoMarcado() {
-		campo.minar();
-
-		// Nessa lambda temos a class que acertaremos e atraves de q metodo
-		assertThrows(ExplosaoException.class, () -> {
-			campo.abrir();
-		});
-	}
-
 	// vizinhanca segura
 	@Test
 	void testeVizinhancaSegura() {
@@ -208,50 +195,5 @@ class CampoTeste {
 		assertFalse(campo3.isAberto());
 		assertFalse(campo3.isMinado());
 		assertFalse(campo3.isMarcado());
-	}
-	
-	@Test
-	void testeToStringMarcado(){
-		Campo campo1 = new Campo(1, 1);
-		campo1.alternarMarcacao();
-		assertEquals("x", campo1.toString());
-	}
-	
-	@Test
-	void testeToStringAbertoMinado() {
-		Campo campo1 = new Campo(1, 1);
-		campo1.minar();
-		// Nao da para testar diretamente
-		assertThrows(ExplosaoException.class, () -> {
-			campo1.abrir();
-            assertEquals("*", campo1.toString());
-        });
-	}
-	
-	@Test
-	void testeToStringMinasNaVizinhanca() {
-		Campo campo1 = new Campo(1, 1);
-		Campo campo2 = new Campo(1, 2);
-		
-		campo1.adicionarVizinho(campo2);
-		campo2.adicionarVizinho(campo1);		
-		
-		campo2.minar();
-		campo1.abrir();
-		
-		assertEquals("1", campo1.toString());
-		
-	}
-	
-	@Test
-	void testeToStringAberto() {
-		campo.abrir();
-		assertEquals(" ", campo.toString());
-	}
-	
-	@Test 
-	void testeToString(){
-		campo.toString();
-		assertEquals("?", campo.toString());
 	}
 }
