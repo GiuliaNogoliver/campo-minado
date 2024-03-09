@@ -2,6 +2,7 @@ package br.com.game.modelo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class Campo {
 	private final int linha;
@@ -12,10 +13,27 @@ public class Campo {
 	private boolean marcado;
 
 	private List<Campo> vizinhos = new ArrayList<>();
+	// aqui em onservadores da para usar set para nao correr o risco
+	// de ter uma duplicidade de observadores
+	private List<CampoObservador> observadores = new ArrayList<>();
+
+	// Pode criar tbm esse BiConsumer ao enves da interface
+	// private List<BiConsumer<Campo, CampoEvento>> observador = new
+	// ArrayList<BiConsumer<Campo,CampoEvento>>();
 
 	public Campo(int linha, int coluna) {
 		this.linha = linha;
 		this.coluna = coluna;
+	}
+
+	public void adicionarObservador(CampoObservador observador) {
+		observadores.add(observador);
+	}
+
+	public void notificarObservador(CampoEvento evento) {
+		observadores.stream()
+				// this pq é esse proprio campo q estar usando o metodo
+				.forEach(o -> o.eventoOcorreu(this, evento));
 	}
 
 	boolean adicionarVizinho(Campo vizinho) {
@@ -43,6 +61,12 @@ public class Campo {
 		if (!aberto) {
 			// se é falso vira verdadeiro se for verdadeiro vira falso
 			marcado = !marcado;
+
+			if (marcado) {
+				notificarObservador(CampoEvento.MARCAR);
+			} else {
+				notificarObservador(CampoEvento.DESMARCAR);
+			}
 		}
 	}
 
@@ -50,15 +74,18 @@ public class Campo {
 		if (!aberto && !marcado) {
 			aberto = true;
 			if (minado) {
-				// TODO Implementar nova versão
-				// FIXME Erro para ser corrigido
+				notificarObservador(CampoEvento.EXPLODIR);
+				return true;
 			}
+			
+			setAberto(true);
+			
 			if (vizinhancaSegura()) {
 				vizinhos.forEach(v -> v.abrir());
 			}
 			return true;
 		} else {
-			// O abrir retorna false pq vc pode nao conseguir abrir 
+			// O abrir retorna false pq vc pode nao conseguir abrir
 			// ele por causa das regras e vc mesmo definiu
 			return false;
 		}
@@ -71,16 +98,17 @@ public class Campo {
 	void minar() {
 		minado = true;
 	}
+
 	// metodo de consulta p teste
 	// um getter
 	public boolean isMarcado() {
 		return marcado;
 	}
-	
+
 	public boolean isAberto() {
 		return aberto;
 	}
-	
+
 	public boolean isFechado() {
 		return !isAberto();
 	}
@@ -91,22 +119,25 @@ public class Campo {
 
 	public void setAberto(boolean aberto) {
 		this.aberto = aberto;
+		if(aberto) {
+			notificarObservador(CampoEvento.ABRIR);
+		}
 	}
 
 	public int getColuna() {
 		return coluna;
 	}
-	
+
 	boolean objetivoAlcancado() {
 		boolean desvendado = !minado && aberto;
 		boolean protegido = minado && marcado;
 		return desvendado || protegido;
 	}
-	
+
 	long minasNaVizinhanca() {
 		return vizinhos.stream().filter(v -> v.minado).count();
 	}
-	
+
 	void reiniciar() {
 		aberto = false;
 		minado = false;
