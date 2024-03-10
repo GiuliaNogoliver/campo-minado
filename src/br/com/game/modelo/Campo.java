@@ -55,7 +55,7 @@ public class Campo {
 		}
 	}
 
-	void alternarMarcacao() {
+	public void alternarMarcacao() {
 		// Eu so posso alterar a marcacao de um campo que esta fechado
 		if (!aberto) {
 			// se é falso vira verdadeiro se for verdadeiro vira falso
@@ -69,7 +69,7 @@ public class Campo {
 		}
 	}
 
-	boolean abrir() {
+	public boolean abrir() {
 		if (!aberto && !marcado) {
 			aberto = true;
 			if (minado) {
@@ -90,7 +90,7 @@ public class Campo {
 		}
 	}
 
-	boolean vizinhancaSegura() {
+	public boolean vizinhancaSegura() {
 		return vizinhos.stream().noneMatch(v -> v.minado);
 	}
 
@@ -133,8 +133,8 @@ public class Campo {
 		return desvendado || protegido;
 	}
 
-	long minasNaVizinhanca() {
-		return vizinhos.stream().filter(v -> v.minado).count();
+	public int minasNaVizinhanca() {
+		return (int)vizinhos.stream().filter(v -> v.minado).count();
 	}
 
 	void reiniciar() {
