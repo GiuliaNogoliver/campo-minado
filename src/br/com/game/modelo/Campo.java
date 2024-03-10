@@ -127,7 +127,7 @@ public class Campo {
 		return coluna;
 	}
 
-	boolean objetivoAlcancado() {
+	public boolean objetivoAlcancado() {
 		boolean desvendado = !minado && aberto;
 		boolean protegido = minado && marcado;
 		return desvendado || protegido;
@@ -141,6 +141,7 @@ public class Campo {
 		aberto = false;
 		minado = false;
 		marcado = false;
+		notificarObservador(CampoEvento.REINICIAR);
 	}
 
 	public boolean isMinado() {

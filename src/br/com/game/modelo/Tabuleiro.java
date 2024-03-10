@@ -119,5 +119,4 @@ public class Tabuleiro implements CampoObservador{
 	public int getColunas() {
 		return colunas;
 	}
-	
 }

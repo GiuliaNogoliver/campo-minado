@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.SwingUtilities;
 
 import br.com.game.modelo.Campo;
 import br.com.game.modelo.CampoEvento;
@@ -45,11 +46,17 @@ public class BotaoCampo extends JButton implements CampoObservador, MouseListene
 		default:
 			aplicarEstiloPadrao();
 		}
+
+		SwingUtilities.invokeLater(() -> {
+			repaint();
+			validate();
+		});
 	}
 
 	private void aplicarEstiloPadrao() {
 		setBackground(BG_PADRAO);
 		setText("");
+		setBorder(BorderFactory.createBevelBorder(0));
 	}
 
 	private void aplicarEstiloExplodir() {
@@ -66,14 +73,14 @@ public class BotaoCampo extends JButton implements CampoObservador, MouseListene
 
 	private void aplicarEstileAbrir() {
 		setBorder(BorderFactory.createLineBorder(Color.GRAY));
-		if(campo.isMinado()){
+		if (campo.isMinado()) {
 			setBackground(BG_EXPLODIR);
 			return;
 		}
-		
+
 		setBackground(BG_PADRAO);
-		
-		switch(campo.minasNaVizinhanca()) {
+
+		switch (campo.minasNaVizinhanca()) {
 		case 1:
 			setForeground(TEXTO_VERDE);
 			break;
@@ -91,9 +98,8 @@ public class BotaoCampo extends JButton implements CampoObservador, MouseListene
 		default:
 			setForeground(Color.PINK);
 		}
-		
-		String valor = !campo.vizinhancaSegura() ? 
-				campo.minasNaVizinhanca()+"":"";
+
+		String valor = !campo.vizinhancaSegura() ? campo.minasNaVizinhanca() + "" : "";
 		setText(valor);
 	}
 
